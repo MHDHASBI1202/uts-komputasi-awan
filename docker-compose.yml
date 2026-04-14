@@ -1,17 +1,23 @@
 services:
   db:
     image: mysql:8.0
-    volumes:
-      - db_data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: password_hasbi
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: hasbi_user
-      MYSQL_PASSWORD: password_hasbi
+    # ... (settingan lainnya tetap sama)
+  
   wordpress:
     depends_on:
       - db
     image: wordpress:latest
+    # --- TAMBAHKAN BARIS DI BAWAH INI ---
+    command: >
+      sh -c "
+      echo '--- HASIL COMMAND TUGAS UTS ---';
+      echo 'a. uname -a:'; uname -a;
+      echo 'b. ip a:'; ip a;
+      echo 'c. apachectl -v:'; apachectl -v;
+      echo 'd. mysql -V:'; mysql -V;
+      echo '---------------------------------';
+      /usr/local/bin/docker-php-entrypoint apache2-foreground"
+    # ------------------------------------
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: hasbi_user
