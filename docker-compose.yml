@@ -1,16 +1,19 @@
-version: '3'
 services:
-  wordpress:
-    image: wordpress:latest
-    ports:
-      - ${PORT}
-    environment:
-      WORDPRESS_DB_HOST: ${MYSQLHOST}:${MYSQLPORT}
-      WORDPRESS_DB_USER: ${MYSQLUSER}
-      WORDPRESS_DB_PASSWORD: ${MYSQLPASSWORD}
-      WORDPRESS_DB_NAME: ${MYSQLDATABASE}
   db:
     image: mysql:8.0
+    volumes:
+      - db_data:/var/lib/mysql
     environment:
+      MYSQL_ROOT_PASSWORD: password_hasbi
       MYSQL_DATABASE: wordpress
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER: hasbi_user
+      MYSQL_PASSWORD: password_hasbi
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: hasbi_user
+      WORDPRESS_DB_PASSWORD: password_hasbi
+      WORDPRESS_DB_NAME: wordpress
